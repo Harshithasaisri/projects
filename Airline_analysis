@@ -1,1 +1,31 @@
 
+
+import numpy as np
+import pandas as pd
+data = pd.read_csv(r"C:\Users\HARSHITHA\Downloads\airlines_dataset\Invistico_Airline.csv")
+print(data.head)
+print(data.isna().sum())
+data['Arrival Delay in Minutes'].fillna(data['Arrival Delay in Minutes'].mode()[0],inplace=True)
+from sklearn.preprocessing import LabelEncoder
+le=LabelEncoder()
+for i in data:
+    data[i]=le.fit_transform(data[i])
+x=np.array(data.iloc[ : ,1:])
+y=data.iloc[ : ,0].values
+print(x.shape,y.shape)
+from sklearn.model_selection import train_test_split
+xtrain,xtest,ytrain,ytest=train_test_split(x,y,test_size=0.2,random_state=5)
+from sklearn.neighbors import KNeighborsClassifier
+model=KNeighborsClassifier(n_neighbors=25)
+model.fit(xtrain,ytrain)
+
+from sklearn.svm import SVC
+model=SVC() 
+model.fit(xtrain,ytrain)
+
+ypred=model.predict(xtest)
+
+from sklearn.metrics import accuracy_score
+print(accuracy_score(ytest,ypred)*100)
+
+
